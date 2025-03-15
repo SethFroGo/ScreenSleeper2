@@ -22,5 +22,29 @@ namespace ScreenSleeper2.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public int minute {
+            get {
+                return ((int)(this["minute"]));
+            }
+            set {
+                this["minute"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool saverMode {
+            get {
+                return ((bool)(this["saverMode"]));
+            }
+            set {
+                this["saverMode"] = value;
+            }
+        }
     }
 }

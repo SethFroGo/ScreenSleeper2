@@ -68,6 +68,11 @@ namespace ScreenSleeper2
             cms = new ContextMenuStrip();
             cms.ShowCheckMargin = true;
 
+            cms.Items.Add(new ToolStripMenuItem("1 minute", null, new EventHandler(Instance.Toggle_One), "1 minute"));
+            cms.Items.Add(new ToolStripMenuItem("3 minutes", null, new EventHandler(Instance.Toggle_Three), "3 minutes"));
+            cms.Items.Add(new ToolStripMenuItem("5 minutes", null, new EventHandler(Instance.Toggle_Five), "5 minutes"));
+            cms.Items.Add(new ToolStripMenuItem("10 minutes", null, new EventHandler(Instance.Toggle_Ten), "10 minutes"));
+            cms.Items.Add(new ToolStripSeparator());
             cms.Items.Add(new ToolStripMenuItem("Screen Off Mode", null, new EventHandler(Instance.Toggle_Mode), "Screen Off Mode"));
             cms.Items.Add(new ToolStripSeparator());
             cms.Items.Add(new ToolStripMenuItem("Quit", null, new EventHandler(Quit_Click), "Quit"));
