@@ -139,7 +139,7 @@ namespace ScreenSleeper2
 
         public void Toggle_Mode(object? sender, System.EventArgs e)
         {
-            var item = (ToolStripMenuItem)notifyIcon1.ContextMenuStrip.Items[5];
+            var item = (ToolStripMenuItem)notifyIcon1.ContextMenuStrip.Items[0];
             item.Checked = !item.Checked;
             this.saverMode = !this.saverMode;
         }
