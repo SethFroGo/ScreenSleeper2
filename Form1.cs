@@ -21,18 +21,42 @@ namespace ScreenSleeper2
         Boolean saverMode;
 
 
-
         public Form1()
         {
+            this.saverMode = Properties.Settings.Default.saverMode;
             Instance = this;
             InitializeComponent();
             Point CurrentPosition = Cursor.Position;
             System.Diagnostics.Debug.WriteLine(CurrentPosition);
             var startTimeSpan = TimeSpan.Zero;
-            var periodTimeSpan = TimeSpan.FromMinutes(3);
+            var periodTimeSpan = TimeSpan.FromMinutes(Properties.Settings.Default.minute);
             var screenSaved = false;
-            this.saverMode = true;
             notifyIcon1.ContextMenuStrip.ShowCheckMargin = true;
+            
+            var saverItem = (ToolStripMenuItem)notifyIcon1.ContextMenuStrip.Items[5];
+            saverItem.Checked = !saverMode;
+
+
+            var switchMin = Properties.Settings.Default.minute;
+            switch (switchMin) 
+            {
+                case 1:
+                    var item = (ToolStripMenuItem)notifyIcon1.ContextMenuStrip.Items[0];
+                    item.Checked = true;
+                    break;
+                case 3:
+                    var item3 = (ToolStripMenuItem)notifyIcon1.ContextMenuStrip.Items[1];
+                    item3.Checked = true;
+                    break;
+                case 5:
+                    var item5 = (ToolStripMenuItem)notifyIcon1.ContextMenuStrip.Items[2];
+                    item5.Checked = true;
+                    break;
+                case 10:
+                    var item10 = (ToolStripMenuItem)notifyIcon1.ContextMenuStrip.Items[3];
+                    item10.Checked = true;
+                    break;
+            }
 
             var timer = new System.Threading.Timer((e) =>
             {
@@ -139,9 +163,64 @@ namespace ScreenSleeper2
 
         public void Toggle_Mode(object? sender, System.EventArgs e)
         {
-            var item = (ToolStripMenuItem)notifyIcon1.ContextMenuStrip.Items[0];
+            var item = (ToolStripMenuItem)notifyIcon1.ContextMenuStrip.Items[5];
             item.Checked = !item.Checked;
             this.saverMode = !this.saverMode;
+            Properties.Settings.Default.saverMode = this.saverMode;
+            Properties.Settings.Default.Save();
+        }
+        public void Toggle_One(object? sender, System.EventArgs e)
+        {
+            var item = (ToolStripMenuItem)notifyIcon1.ContextMenuStrip.Items[0];
+            item.Checked = true;
+            var item3 = (ToolStripMenuItem)notifyIcon1.ContextMenuStrip.Items[1];
+            item3.Checked = false;
+            var item5 = (ToolStripMenuItem)notifyIcon1.ContextMenuStrip.Items[2];
+            item5.Checked = false;
+            var item10 = (ToolStripMenuItem)notifyIcon1.ContextMenuStrip.Items[3];
+            item10.Checked = false;
+            Properties.Settings.Default.minute = 1;
+            Properties.Settings.Default.Save();
+        }
+
+        public void Toggle_Three(object? sender, System.EventArgs e)
+        {
+            var item = (ToolStripMenuItem)notifyIcon1.ContextMenuStrip.Items[0];
+            item.Checked = false;
+            var item3 = (ToolStripMenuItem)notifyIcon1.ContextMenuStrip.Items[1];
+            item3.Checked = true;
+            var item5 = (ToolStripMenuItem)notifyIcon1.ContextMenuStrip.Items[2];
+            item5.Checked = false;
+            var item10 = (ToolStripMenuItem)notifyIcon1.ContextMenuStrip.Items[3];
+            item10.Checked = false;
+            Properties.Settings.Default.minute = 3;
+            Properties.Settings.Default.Save();
+        }
+        public void Toggle_Five(object? sender, System.EventArgs e)
+        {
+            var item = (ToolStripMenuItem)notifyIcon1.ContextMenuStrip.Items[0];
+            item.Checked = false;
+            var item3 = (ToolStripMenuItem)notifyIcon1.ContextMenuStrip.Items[1];
+            item3.Checked = false;
+            var item5 = (ToolStripMenuItem)notifyIcon1.ContextMenuStrip.Items[2];
+            item5.Checked = true;
+            var item10 = (ToolStripMenuItem)notifyIcon1.ContextMenuStrip.Items[3];
+            item10.Checked = false;
+            Properties.Settings.Default.minute = 5;
+            Properties.Settings.Default.Save();
+        }
+        public void Toggle_Ten(object? sender, System.EventArgs e)
+        {
+            var item = (ToolStripMenuItem)notifyIcon1.ContextMenuStrip.Items[0];
+            item.Checked = false;
+            var item3 = (ToolStripMenuItem)notifyIcon1.ContextMenuStrip.Items[1];
+            item3.Checked = false;
+            var item5 = (ToolStripMenuItem)notifyIcon1.ContextMenuStrip.Items[2];
+            item5.Checked = false;
+            var item10 = (ToolStripMenuItem)notifyIcon1.ContextMenuStrip.Items[3];
+            item10.Checked = true;
+            Properties.Settings.Default.minute = 10;
+            Properties.Settings.Default.Save();
         }
 
     }
