@@ -3,28 +3,65 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using CSCore.CoreAudioAPI;
 using System.Reflection;
+using Microsoft.Win32;
+using System.Diagnostics;
+using System.Configuration;
 
 namespace ScreenSleeper2
 {
     public partial class Form1 : Form
     {
+        public Form1 Instance;
 
         [DllImport("user32.dll")]
         static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, int wParam, int lParam);
-        
+
+        RegistryKey screenSaverKey = Registry.CurrentUser.OpenSubKey(@"Control Panel\Desktop");
+
+        Boolean saverMode;
+
+
+
         public Form1()
         {
-            InitializeComponent(); 
+            Instance = this;
+            InitializeComponent();
             Point CurrentPosition = Cursor.Position;
             System.Diagnostics.Debug.WriteLine(CurrentPosition);
             var startTimeSpan = TimeSpan.Zero;
-            var periodTimeSpan = TimeSpan.FromMinutes(2);
+            var periodTimeSpan = TimeSpan.FromMinutes(3);
+            var screenSaved = false;
+            this.saverMode = true;
+            notifyIcon1.ContextMenuStrip.ShowCheckMargin = true;
 
             var timer = new System.Threading.Timer((e) =>
             {
-                if (Cursor.Position == CurrentPosition && !IsAudioPlaying(GetDefaultRenderDevice()))
+
+                if (saverMode)
                 {
-                    TurnOffScreens();
+                    if (Cursor.Position == CurrentPosition && !IsAudioPlaying(GetDefaultRenderDevice()) && !screenSaved)
+                    {
+                        if (screenSaverKey != null)
+                        {
+                            string screenSaverFilePath = screenSaverKey.GetValue("SCRNSAVE.EXE", string.Empty).ToString();
+                            if (!string.IsNullOrEmpty(screenSaverFilePath) && File.Exists(screenSaverFilePath))
+                            {
+                                Process screenSaverProcess = Process.Start(new ProcessStartInfo(screenSaverFilePath, "/s"));
+                                screenSaved = true;
+                                screenSaverProcess.WaitForExit();
+                            }
+                        }
+                    }
+                    else if (Cursor.Position != CurrentPosition || IsAudioPlaying(GetDefaultRenderDevice()))
+                    {
+                        screenSaved = false;
+                    }
+                } else
+                {
+                    if (Cursor.Position == CurrentPosition && !IsAudioPlaying(GetDefaultRenderDevice()))
+                    {
+                        TurnOffScreens();
+                    }
                 }
                 CurrentPosition = Cursor.Position;
                 System.Diagnostics.Debug.WriteLine(CurrentPosition);
@@ -37,7 +74,7 @@ namespace ScreenSleeper2
             var timer1 = new System.Windows.Forms.Timer();
             if (milliseconds == 0 || milliseconds < 0) return;
 
-            // Console.WriteLine("start wait timer");
+            
             timer1.Interval = milliseconds;
             timer1.Enabled = true;
             timer1.Start();
@@ -46,7 +83,6 @@ namespace ScreenSleeper2
             {
                 timer1.Enabled = false;
                 timer1.Stop();
-                // Console.WriteLine("stop wait timer");
             };
 
             while (timer1.Enabled)
@@ -55,7 +91,7 @@ namespace ScreenSleeper2
             }
         }
 
-        public static bool IsAudioPlaying(MMDevice device)
+        public bool IsAudioPlaying(MMDevice device)
         {
             using (var meter = AudioMeterInformation.FromDevice(device))
             {
@@ -63,7 +99,7 @@ namespace ScreenSleeper2
             }
         }
 
-        public static MMDevice GetDefaultRenderDevice()
+        public MMDevice GetDefaultRenderDevice()
         {
             using (var enumerator = new MMDeviceEnumerator())
             {
@@ -71,7 +107,7 @@ namespace ScreenSleeper2
             }
         }
 
-        public static void TurnOffScreens()
+        public void TurnOffScreens()
         {
             SendMessage(new Form().Handle, 0x0112, 0xF170, 2);
         }
@@ -99,6 +135,13 @@ namespace ScreenSleeper2
         {
             this.ShowInTaskbar = true;
             this.Hide();
+        }
+
+        public void Toggle_Mode(object? sender, System.EventArgs e)
+        {
+            var item = (ToolStripMenuItem)notifyIcon1.ContextMenuStrip.Items[5];
+            item.Checked = !item.Checked;
+            this.saverMode = !this.saverMode;
         }
 
     }
