@@ -66,7 +66,18 @@ namespace ScreenSleeper2
             notifyIcon1.Text = "ScreenSleeper";
             notifyIcon1.Icon = Properties.Resources.sunIcon;
             cms = new ContextMenuStrip();
+            cms.ShowCheckMargin = true;
 
+
+
+
+            cms.Items.Add(new ToolStripMenuItem("1 minute", null, new EventHandler(Instance.Toggle_Mode), "1 minute"));
+            cms.Items.Add(new ToolStripMenuItem("3 minutes", null, new EventHandler(Instance.Toggle_Mode), "3 minute"));
+            cms.Items.Add(new ToolStripMenuItem("5 minutes", null, new EventHandler(Instance.Toggle_Mode), "5 minute"));
+            cms.Items.Add(new ToolStripMenuItem("10 minutes", null, new EventHandler(Instance.Toggle_Mode), "10 minute"));
+            cms.Items.Add(new ToolStripSeparator());
+            cms.Items.Add(new ToolStripMenuItem("Screen Off Mode", null, new EventHandler(Instance.Toggle_Mode), "Screen Off Mode"));
+            cms.Items.Add(new ToolStripSeparator());
             cms.Items.Add(new ToolStripMenuItem("Quit", null, new EventHandler(Quit_Click), "Quit"));
 
             notifyIcon1.ContextMenuStrip = cms;
@@ -100,6 +111,7 @@ namespace ScreenSleeper2
             // End application though ApplicationContext
             Environment.Exit(0);
     }
+        
 
 
         #endregion
